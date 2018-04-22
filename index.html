@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <title>vue_chat</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        * {
+          -webkit-box-sizing: border-box;
+             -moz-box-sizing: border-box;
+                  box-sizing: border-box;
+        }
+
+        body {
+            padding: 0px;
+            margin: 0px;
+            font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+            background-color: #B0BEC5;
+        }
+
+        ._btn {
+            display: inline-block;
+            width: 150px;
+            height: 40px;
+            font-size: 17px;
+            padding-top: 10px;
+            margin-top: 10px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        ._btn._right {
+            float: right;
+        }
+
+        ._btn._wide {
+            width: 310px !important;
+        }
+
+        #root {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        #_login_area {
+            position: absolute;
+            width: 310px;
+            height: 200px;
+            top: calc(50% - 100px);
+            left: calc(50% - 155px);
+        }
+
+        #_login_area input {
+            width: 310px;
+            height: 40px;
+            border: 1px solid #000;
+            font-size: 20px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+
+        #_login_area ._btn:first-child{
+            margin-right: 10px;
+        }
+
+
+        #_info_area {
+            height: 60px;
+            background: #616161;
+            padding: 0px 15px;
+            -webkit-box-shadow: 0px 0px 8px 0px #000000;
+               -moz-box-shadow: 0px 0px 8px 0px #000000;
+                    box-shadow: 0px 0px 8px 0px #000000;
+        }
+
+
+        #_file {
+            height: 40px;
+            padding: 8px 15px;
+            background-color: #757575;
+            text-align: right;
+            -webkit-box-shadow: 0px 0px 8px #888;
+               -moz-box-shadow: 0px 0px 8px #888;
+                    box-shadow: 0px 0px 8px #888;
+        }
+
+
+		#_file ._guide {
+			display: inline-block;
+			float: left;
+			margin-top: 3px;
+			color: #fff;
+			font-size: 16px;
+		}
+
+        #_textarea {
+            height: 100px;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        #_textarea textarea {
+            clear:both;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background-color: #fff;
+            padding: 5px;
+            font-size: 15px;
+        }
+
+
+        #_chat_area {
+            height: calc(100% - 200px);
+            overflow-y: auto;
+            padding: 30px 10px;
+        }
+
+        #_chat_area ._chat {
+            clear: both;
+        }
+
+        #_chat_area ._talk {
+            margin-top: 10px;
+            display: inline-block;
+            width: auto;
+            padding: 15px;
+            text-align: left;
+            max-width: 62%;
+			word-wrap: break-word;
+        }
+
+        #_chat_area ._talk iframe {
+			max-width: 100% !important;
+        }
+
+        #_chat_area ._talk.talk-left {
+            float: left;
+            background-color: #fff;
+        }
+
+
+        #_chat_area ._talk.talk-right {
+            float: right;
+            background-color: #FFF3E0;
+        }
+
+        ._time {
+            padding: 15px 5px !important;
+            display: inline-block;
+            color: gray;
+            font-size: 9px;    
+        }
+
+        #_chat_area ._file_img {
+			width: 200px !important;
+            max-width: 100% !important;
+        }
+
+        #_chat_area ._file_img a img {
+            max-width: 100%;
+        }
+
+        #_chat_area ._file_name {
+            margin-top: 5px;
+            margin-bottom: 25px;
+        }
+
+        #_chat_area ._file_name._last {
+            margin-bottom: 0px !important;
+        }
+
+        #_chat_area ._file_name a {
+            color: #000;
+            text-decoration: none;
+        }
+
+
+        #_chat_area ._file_name ._size {
+            color: gray;
+            font-size: 9px;
+            margin-left: 15px;
+        }
+
+        #_chat_area ._file_name .fa {
+            margin-right: 5px;
+        }
+
+        ._time.time-right {
+            float: right;
+            text-align: right;
+        }
+
+        ._email {
+            height: 15px;
+        }
+
+        ._f_icon {
+            margin-top: 3px;
+            font-size: 18px !important;
+            color: #fff;
+            cursor: pointer;
+            cursor: hand;
+        }
+
+        ._f_icon span {
+            font-size: 16px !important;
+            margin-left: 6px;
+        }
+
+        #mfile {
+            display: none;
+        }
+
+
+        #_user_list {
+            position: fixed;
+			height: calc(100% - 200px);
+            width: 450px;
+			max-width: 100%;
+            top: 60px;
+            left: -500px;
+            z-index: 100;
+            opacity: 0;
+            background-color: #fff;
+            transition: all .2s ease;
+            -webkit-box-shadow: 4px 0px 10px -4px rgba(0,0,0,0.75);
+            -moz-box-shadow: 4px 0px 10px -4px rgba(0,0,0,0.75);
+            box-shadow: 4px 0px 10px -4px rgba(0,0,0,0.75);
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+
+        #_user_list._show {
+            left: 0px !important;
+            opacity: 1 !important;
+        }
+
+        #_user_list > div {
+            height: 30px;
+            
+        }
+
+        #_user_list > div {
+            height: 30px;
+            
+        }
+
+        #_user_list ._logouted {
+            color: #ccc;
+        }
+
+        #_user_list ._datetime {
+            font-size: 9px;
+            margin-left: 15px;
+        }
+
+
+		.hr-text {
+			margin: auto;
+			line-height: 4em;
+			position: relative;
+			outline: 0;
+			border: 0;
+			text-align: center;
+			height: 4em;
+		}
+		.hr-text:before {
+			content: '';
+			background: #e0e0e0;
+			position: absolute;
+			left: 0;
+			top: 50%;
+			width: 100%;
+			height: 1px;
+		}
+		.hr-text:after {
+			content: attr(data-content);
+			position: relative;
+			display: inline-block;
+			color: black;
+
+			padding: 0 15px;
+			line-height: 1.7em;
+			color: #e0e0e0;
+			background-color: #B0BEC5;
+		}
+
+
+
+		@media screen and (min-width:501px) {
+		}
+		@media screen and (max-width:500px) {
+
+			#_file ._guide {
+				display: none;
+			}
+			#_user_list {
+				height: calc(100% - 160px);
+			}
+			#_chat_area {
+				height: calc(100% - 160px);
+			}
+			#_textarea {
+				height: 60px;
+			}
+		}
+
+
+    </style>
+</head>
+
+<body>
+    <div id="root">
+
+        <template v-if="uid != null && uid != false">
+            <div id="_info_area">
+				<div id="_user_list" v-bind:class="{'_show': is_user_list_show}">
+					<div v-for="(value, key) in users" v-html="_display_user(value)" v-bind:class="{'_logouted': !value.login}"></div>
+				</div>
+                <div class="_btn" @click="is_user_list_show = !is_user_list_show">User List</div>
+                <div class="_btn _right" @click="_logout">Logout</div>
+            </div>
+            <div id="_chat_area" onscroll="_scroll_moved()">
+                <div v-for="(value, key) in items" class="_chat" @dblClick="_delete(key)">
+                    <div v-if="value.msg" v-html="_display_msg(value.msg)" class="_talk" v-bind:class="{'talk-right': (value.email == email), 'talk-left': (value.email != email)}"></div>
+                    <div v-if="value.file" v-html="_display_file(key, value.file)" class="_talk" v-bind:class="{'talk-right': (value.email == email), 'talk-left': (value.email != email)}"></div>
+                    <div v-if="value.msg || value.file" v-html="_display_email(value.email) + _display_datetime(value.datetime)" class="_time" v-bind:class="{'time-right': (value.email == email), 'time-left': (value.email != email)}"></div>
+					<hr v-if="!value.uid" class="hr-text" :data-content="value.date">
+                </div>
+            </div>
+            <div id="_file">
+                <span class="_guide">multiline : ctrl + enter</span>
+				<i class="fa fa-file-o _f_icon" onclick="document.getElementById('mfile').click()"> <span>Upload Files</span></i>
+				<input id="mfile" type="file" multiple @change="_file_upload">
+            </div>
+            <div id="_textarea">
+                <textarea @keyup.ctrl.13="_new_line" @keydown.13.prevent="_insert"></textarea>
+            </div>
+        </template>
+        <template v-if="uid == null && uid != false">
+            <div id="_login_area">
+                <div>
+                    <input type="text" v-model="id" placeholder="email">
+                </div>
+                <div>
+                    <input type="password" v-model="pw" placeholder="pw" @keyup.enter="_login">
+                </div>
+                <div>
+                    <div class="_btn" @click="_login">Login</div><div class="_btn" @click="_join">Join</div><div class="_btn _wide" @click="_google_login">Google Login</div>
+                </div>
+            </div>
+        </template>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.8/vue.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/async/2.3.0/async.js"></script>
+    <script>
+        ////// Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBdxMWlyZJfPrCsyPISw0v22XImQ0pEeSw",
+            authDomain: "vue-shop.firebaseapp.com",
+            databaseURL: "https://vue-shop.firebaseio.com",
+            projectId: "vue-shop",
+            storageBucket: "vue-shop.appspot.com",
+            messagingSenderId: "287982435294"
+        };
+        firebase.initializeApp(config);
+        var chat_ref = firebase.database().ref("chat");
+        var login_ref = firebase.database().ref("login");
+        var myFileStorage = firebase.storage().ref("myFile");
+
+
+        var vue;
+        var scroll_bottom_position = 0;
+
+        function bytesToSize(bytes) {
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes == 0) return 'n/a';
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            if (i == 0) return bytes + ' ' + sizes[i];
+            return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+        }
+
+
+        function _auto_bottom(k) {
+            if(k <= vue.last_load_key) {
+                scroll_bottom_position = 0;
+            }
+            vue._auto_scroll_bottom();
+        }
+
+        function _scroll_moved() {
+            var objDiv = document.getElementById("_chat_area");
+            scroll_bottom_position = objDiv.scrollTop - objDiv.scrollHeight + objDiv.offsetHeight;
+        //  console.log(scroll_bottom_position);
+        }
+
+
+        vue = new Vue({
+            el: "#root",
+            data: {
+                items: {},
+                users: {},
+                id: null,
+                pw: null,
+                uid: false,
+                email: null,
+                is_my_chat: false,
+                last_load_key: null,
+                is_user_list_show: false
+            },
+            created: function () {
+                var z = this;
+				var ddd = "";
+                chat_ref.on("child_added", d => {
+					if(ddd != d.val().datetime.split(" ",4).join(" ")) {
+						ddd = d.val().datetime.split(" ",4).join(" ");
+						Vue.set(z.items, ddd, {date: ddd});
+					}
+                    Vue.set(z.items, d.key, d.val());
+                    z.$nextTick(function () {
+                        z._auto_scroll_bottom();
+                    })
+                })
+
+                chat_ref.on("child_removed", d => {
+                    Vue.delete(z.items, d.key);
+                })
+
+                chat_ref.orderByKey().limitToLast(1).once("value", d => {
+                    z.last_load_key = Object.keys(d.val())[0];
+                })
+                
+                login_ref.orderByKey().on("child_added", d => {
+                    Vue.set(z.users, d.key, d.val());
+                })
+
+                login_ref.on("child_changed", d => {
+                    Vue.set(z.users, d.key, d.val());
+                })
+                
+                firebase.auth().onAuthStateChanged(function (user) {
+
+                    if (user) {
+                        z.uid = user.uid;
+                        z.email = user.email;
+                        z.id = "";
+                        z.pw = "";
+
+                        
+                        login_ref.once("value", d => {
+                            
+                            var _users = {};
+                            if(d.val()) _users = d.val();
+                            var key = "";
+                            for(k in _users) {
+                                if(_users[k].uid == user.uid) key = k;
+                            }
+
+                            if(key == "") {
+                                login_ref.push().set({
+                                    uid: z.uid,
+                                    email: z.email,
+                                    datetime: moment().format('llll'),
+                                    login: true
+                                })
+                            } else {
+                                login_ref.child(key).update({
+                                    datetime: moment().format('llll'),
+                                    login: true
+                                })
+                            }
+
+                            z.$nextTick(function () {
+                                z._auto_scroll_bottom();
+                            })
+                        })
+
+                    } else {
+                        
+                        z.uid = null;
+                        z.email = null;
+                    }
+                })
+
+
+            },
+            methods: {
+                _delete: function (key) {
+					if (!this.items[key].uid) return;
+                    if (this.uid != this.items[key].uid) {
+                        alert('not yours');
+                        return;
+                    }
+                    chat_ref.child(key).remove();
+                },
+                _insert: function () {
+                    if (!event.ctrlKey && event.target.value) {
+                        this.is_my_chat = true;
+                        chat_ref.push().set({
+                            uid: this.uid,
+                            email: this.email,
+                            msg: event.target.value,
+                            datetime: moment().format('llll')
+                        })
+                        event.target.value = "";
+                    }
+                },
+                _new_line: function () {
+                    event.target.value = event.target.value + '\n';
+                },
+                _file_upload: function(e) {
+                    var z = this;
+                    var files = e.target.files || e.dataTransfer.files;
+                    if (!files.length)
+                    return;
+
+                    var x = [];
+
+                    async.times(files.length, function(n, next) {
+
+                        var f = files[n];
+                        var task = myFileStorage.child(f.name).put(f);
+
+                        task.on('state_changed', function(snapshot){
+                        }, function(error) {
+                        }, function() {
+
+                            x[n] = {
+                                type: task.snapshot.a.contentType,
+                                name: task.snapshot.a.name,
+                                size: task.snapshot.a.size,
+                                url: task.snapshot.downloadURL
+                            };
+                            next();
+
+                        })
+
+                    }, function(err) {
+
+                        //console.log(x);
+
+                        z.is_my_chat = true;
+                        chat_ref.push().set({
+                            uid: z.uid,
+                            email: z.email,
+                            file: x,
+                            datetime: moment().format('llll')
+                        })
+                    });
+
+                    e.target.value = '';
+
+                },
+                _join: function () {
+                    firebase.auth().createUserWithEmailAndPassword(this.id, this.pw)
+                        .catch(function (error) {
+                            alert(error);
+                        });
+                },
+                _login: function () {
+                    firebase.auth().signInWithEmailAndPassword(this.id, this.pw)
+                        .catch(function (error) {
+                            alert(error);
+                        });
+                },
+                _google_login: function () {
+                    var provider = new firebase.auth.GoogleAuthProvider();
+
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                        var token = result.credential.accessToken;
+                        var user = result.user;
+
+                    }).catch(function(error) {
+                            alert(error);
+                    });
+
+                },
+                _logout: function () {
+
+                    for(k in this.users) {
+                        if(this.users[k].uid == this.uid){
+                            login_ref.child(k).update({
+                                datetime: moment().format('llll'),
+                                login: false
+                            })
+                        }
+                    }
+
+                    firebase.auth().signOut();
+                },
+                _display_msg: function (v) {
+                    return v.replace(/(\n)/g, '<br />');
+                },
+                _display_email: function (v) {
+                    return "<div class='_email'>" + v + "</div>";
+                },
+                _display_datetime: function (v) {
+                    return v.replace(moment().format('ddd') + ', ' + moment().format('ll'),'');
+                },
+                _display_file: function (k, v) {
+                    var str = "";
+                    v.forEach(function(e,i,arr) {
+                        if(e.type.split("/")[0] == "image") str = str + "<div class='_file_img'><a href='" + e.url + "' download><img src='" + e.url + "' onload='_auto_bottom(\"" + k + "\")'></a></div>";
+                        str = str + "<div class='_file_name" + (i === arr.length - 1 ? " _last" : "") + "'><a href='" + e.url + "' download><i class='fa fa-file-o'></i>" + e.name + "</a><span class='_size'>" + bytesToSize(e.size) + "</span></div>";
+                    });
+                    return str;
+                },
+                _display_user: function (v) {
+                    return v.email + "<span class='_datetime'>" + v.datetime + "</span>";
+                },
+                _auto_scroll_bottom: function () {
+                    var objDiv = document.getElementById("_chat_area");
+                    if (this.uid != null && (scroll_bottom_position == 0 || this.is_my_chat)) {
+                        objDiv.scrollTop = objDiv.scrollHeight - objDiv.offsetHeight;
+
+                        if(this.is_my_chat) this.is_my_chat = false;
+                    }
+                },
+                _toggle_user_list: function () {
+                    this.is_user_list_show = !this.is_user_list_show;
+                }
+            }
+        })            
+    </script>
+</body>
+
+</html>
